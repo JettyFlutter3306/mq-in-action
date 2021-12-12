@@ -1,4 +1,4 @@
-package cn.element;
+package cn.element.producer.rabbit.workpattern;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -8,9 +8,10 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 /**
- * 生产者连接到RabbitMQ
+ * RabbitMQ的工作模式演示
+ * 一对多,多个线程之间是竞争关系
  */
-public class ProducerApp {
+public class WorkQueuesProducer {
 
     public static void main(String[] args) throws IOException, TimeoutException {
         //1.创建连接工厂
@@ -46,7 +47,7 @@ public class ProducerApp {
          *
          * 如果没有当前名称的队列,那么就会创建这个队列,有则不会创建
          */
-        channel.queueDeclare("hello_world", true, false, false, null);
+        channel.queueDeclare("work_queues", true, false, false, null);
 
         /* 6.发送消息
          * basicPublish(String exchange, String routingKey, boolean mandatory, BasicProperties props, byte[] body)
@@ -56,12 +57,15 @@ public class ProducerApp {
          *  3.props:            配置信息
          *  4.body:             发送的消息数据
          */
-        String body = "Hello rabbitmq~~~~~~";
+        for (int i = 1; i <= 10; i++) {
+            String body = i + ".Hello rabbitmq~~~~~~";
 
-        channel.basicPublish("", "hello_world", null, body.getBytes());
+            channel.basicPublish("", "work_queues", null, body.getBytes());
+        }
 
         //7.释放资源
-//        channel.close();
-//        connection.close();
+        channel.close();
+        connection.close();
     }
+
 }

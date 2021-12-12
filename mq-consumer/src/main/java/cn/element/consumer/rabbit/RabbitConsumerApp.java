@@ -1,4 +1,4 @@
-package cn.element;
+package cn.element.consumer.rabbit;
 
 import com.rabbitmq.client.*;
 
@@ -8,7 +8,7 @@ import java.util.concurrent.TimeoutException;
 /**
  * 消费者连接到RabbitMQ
  */
-public class ConsumerApp {
+public class RabbitConsumerApp {
 
     public static void main(String[] args) throws IOException, TimeoutException {
         //1.创建连接工厂
